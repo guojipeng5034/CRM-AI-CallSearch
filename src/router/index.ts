@@ -1,28 +1,26 @@
 // src/router/index.ts
 
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-
+import { useUserStore } from '@/store/user'
 // 定义路由数组
 const routes: Array<RouteRecordRaw> = [
   {
-    // 默认路由，当用户访问根路径'/'时，自动重定向到我们的查询页面
+    // 将默认路径指向新的登录页
     path: '/',
-    redirect: '/call-search'
+    redirect: '/login'
   },
   {
+    // 新增登录页路由
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/login/index.vue')
+  },
+  {
+    // 保持仪表盘页面路由不变
     path: '/call-search',
     name: 'CallDataSearch',
-    // 使用动态导入（懒加载）来引入页面组件
-    // 这意味着只有当用户访问这个路由时，对应的组件代码才会被加载
-    // 这对于应用的性能优化非常有好处
     component: () => import('@/views/example/index.vue')
-  },
-  // 你可以在这里添加更多的路由规则...
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   component: () => import('@/views/About.vue')
-  // }
+  }
 ]
 
 // 创建 router 实例
@@ -32,5 +30,17 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes, // 简写，相当于 routes: routes
 })
+// --- 新增：全局前置守卫 ---
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
 
+  // 如果目标路由不是登录页，且用户未认证
+  if (to.name !== 'Login' && !userStore.isAuthenticated()) {
+    // 重定向到登录页
+    next({ name: 'Login' });
+  } else {
+    // 否则，正常放行
+    next();
+  }
+});
 export default router
