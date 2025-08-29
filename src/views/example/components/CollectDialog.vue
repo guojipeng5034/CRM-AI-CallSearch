@@ -1,22 +1,22 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="数据采集" width="50%" :close-on-click-modal="false">
-    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px">
-      <el-form-item label="姓名" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入姓名"></el-input>
+  <el-dialog v-model="dialogVisible" title="数据采集终端 | DATA COLLECTION" width="600px" :close-on-click-modal="false">
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top" class="collect-form">
+      <el-form-item label="姓名 (NAME)" prop="name">
+        <el-input v-model="formData.name" placeholder="输入目标姓名"></el-input>
       </el-form-item>
-      <el-form-item label="年龄" prop="age">
-        <el-input v-model.number="formData.age" type="number" placeholder="请输入年龄"></el-input>
+      <el-form-item label="年龄 (AGE)" prop="age">
+        <el-input v-model.number="formData.age" type="number" placeholder="输入目标年龄"></el-input>
       </el-form-item>
-      <el-form-item label="电话" prop="phone">
-        <el-input v-model="formData.phone" placeholder="请输入电话号码"></el-input>
+      <el-form-item label="电话 (PHONE)" prop="phone">
+        <el-input v-model="formData.phone" placeholder="输入目标电话"></el-input>
       </el-form-item>
-       <el-form-item label="备注" prop="notes">
-        <el-input v-model="formData.notes" type="textarea" placeholder="请输入备注"></el-input>
+       <el-form-item label="备注 (NOTES)" prop="notes">
+        <el-input v-model="formData.notes" type="textarea" :rows="3" placeholder="输入备注信息..."></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="dialogVisible = false">取消</el-button>
-      <el-button type="primary" @click="submitForm" :loading="isFormSubmitting">提交表单</el-button>
+      <el-button type="primary" @click="submitForm" :loading="isFormSubmitting">确认提交</el-button>
     </template>
   </el-dialog>
 </template>
@@ -38,7 +38,6 @@ interface FormData {
 const props = defineProps<{
   initialData: FormData | null;
 }>();
-
 const emit = defineEmits(['submit-success']);
 
 // v-model 控制
@@ -51,15 +50,17 @@ const formData = reactive<FormData>({
   id: null, name: '', age: null, phone: '', notes: '',
 });
 
-// 监听 props 变化，当对话框打开并传入新数据时，填充表单
 watch(() => props.initialData, (newData) => {
-  if (newData) {
+  // 当对话框可见时才填充数据，避免在后台不可见时更新
+  if (dialogVisible.value && newData) {
     Object.assign(formData, newData);
   } else {
-    // 如果没有传入数据，重置表单
+    // 关闭或没有数据时，重置表单和校验状态
     formRef.value?.resetFields();
+    formRef.value?.clearValidate();
   }
 });
+
 
 // 表单验证规则
 const formRules = reactive<FormRules>({
@@ -79,17 +80,13 @@ const submitForm = async () => {
       isFormSubmitting.value = true;
       try {
         console.log('提交表单:', formData);
-        // **模拟API调用**
         await new Promise(resolve => setTimeout(resolve, 1000));
-        // **TODO: 替换为真实的 axios API 请求**
-        // await yourApi.submitForm(formData);
-        
-        ElMessage.success('表单提交成功！');
-        emit('submit-success'); // 通知父组件刷新列表
-        dialogVisible.value = false; // 关闭对话框
+        ElMessage.success('数据提交成功！');
+        emit('submit-success');
+        dialogVisible.value = false;
       } catch (error) {
         console.error("表单提交失败:", error);
-        ElMessage.error('表单提交失败，请重试！');
+        ElMessage.error('数据提交失败，请重试！');
       } finally {
         isFormSubmitting.value = false;
       }

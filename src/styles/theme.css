@@ -1,0 +1,201 @@
+/* src/styles/theme.css */
+
+/* 1. 引入推荐字体 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* 2. 定义核心变量 */
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+  --primary-color: #667eea;
+  --primary-color-dark: #5a67d8;
+  --success-color: #28a745;
+  --danger-color: #e53e3e;
+
+  --bg-color: #f5f7fa;
+  --surface-color: #ffffff;
+  --border-color: #e2e8f0;
+  
+  --text-color-header: #ffffff;
+  --text-color-primary: #2d3748;
+  --text-color-secondary: #4a5568;
+  --text-color-muted: #718096;
+
+  --main-border-radius: 12px;
+  --main-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+  /* 3. 覆盖 Element Plus 全局变量 */
+  --el-color-primary: var(--primary-color);
+  --el-color-success: var(--success-color);
+  --el-color-danger: var(--danger-color);
+  
+  --el-bg-color: var(--bg-color);
+  --el-fill-color-blank: var(--bg-color);
+  
+  --el-border-color: var(--border-color);
+  --el-border-radius-base: 8px;
+  
+  --el-text-color-primary: var(--text-color-primary);
+  --el-text-color-regular: var(--text-color-secondary);
+  --el-text-color-secondary: var(--text-color-muted);
+
+  --el-box-shadow-light: 0 2px 10px rgba(0, 0, 0, 0.07);
+
+  --el-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 4. 全局样式 */
+body, html {
+  background-color: var(--bg-color);
+  font-family: var(--el-font-family);
+  color: var(--text-color-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 5. 深度定制 Element Plus 组件 */
+
+/* 卡片和对话框 */
+.el-card, .el-dialog {
+  background-color: var(--surface-color) !important;
+  border-radius: var(--main-border-radius) !important;
+  border: none !important;
+  box-shadow: var(--main-box-shadow) !important;
+}
+.el-dialog__header {
+    margin-right: 0 !important;
+}
+.el-dialog__title {
+  color: var(--text-color-primary) !important;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* 按钮 */
+.el-button--primary {
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3) !important;
+  transition: all 0.3s ease;
+}
+.el-button--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4) !important;
+}
+/* === 输入框、选择器、日期选择器最终统一样式 === */
+
+/* 1. 为所有输入类组件的“外壳”定义样式 */
+.el-input,
+.el-select,
+.el-date-editor.el-input {
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--el-border-radius-base) !important;
+  transition: all 0.2s ease !important;
+  background: var(--surface-color) !important;
+  box-shadow: none !important;
+}
+
+/* 2. 移除内部 wrapper 的边框和背景，防止重叠 */
+.el-input__wrapper,
+.el-select__wrapper {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 11px !important; /* 保持原有的内边距 */
+}
+
+/* 3. 统一定义激活（focus）状态 */
+.el-input.is-focus,
+.el-select.is-focus,
+.el-date-editor.el-input.is-active {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+}
+/* 表格 */
+.el-table {
+  border-radius: var(--main-border-radius);
+}
+.el-table th.el-table__cell {
+  background-color: #f7fafc !important;
+  color: var(--text-color-secondary) !important;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-color) !important;
+}
+.el-table td.el-table__cell {
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+.el-table__row--striped td.el-table__cell {
+    background-color: #f8fafc !important;
+}
+.el-table__body tr:hover > td {
+  background-color: #f8fafc !important;
+}
+
+/* 标签 */
+.el-tag {
+    border-color: transparent !important;
+    font-weight: 500;
+}
+.el-tag--success {
+    background-color: #f0fff4 !important;
+    color: #2f855a !important;
+}
+.el-tag--warning {
+    background-color: #fffaf0 !important;
+    color: #c05621 !important;
+}
+/* 1. 日期选择器下拉面板 */
+.el-picker-panel {
+  background-color: var(--surface-color) !important;
+  border-radius: var(--main-border-radius) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--main-box-shadow) !important;
+}
+
+/* 移除下拉框自带的小箭头 */
+.el-popper__arrow::before {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* 日期面板内部单元格 */
+.el-date-table td.today .el-date-table-cell__text {
+  color: var(--primary-color) !important;
+  font-weight: bold;
+}
+.el-date-table td.available:hover {
+  color: var(--primary-color) !important;
+}
+
+/* 选中日期的样式 */
+.el-date-table td.current:not(.disabled) .el-date-table-cell__text {
+  background-color: var(--primary-color) !important;
+  color: var(--text-color-header) !important;
+  border-radius: 50%;
+}
+
+/* 2. 表格内的链接按钮 */
+.el-table .el-button.is-link,
+.el-table .el-button.is-link:hover,
+.el-table .el-button.is-link:focus,
+.el-table .el-button.is-link:active {
+  color: var(--primary-color) !important;
+  font-weight: 500;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  transform: none !important; /* 移除按钮的通用 hover 效果 */
+}
+
+.el-table .el-button.is-link:hover {
+  color: var(--primary-color-dark) !important;
+  text-decoration: underline;
+}
+.el-table .el-button.is-link {
+  color: var(--surface-color) !important;
+  font-weight: 500;
+}
+
+.el-table .el-button.is-link:hover {
+  color: var(--primary-color-dark) !important;
+}

@@ -1,31 +1,27 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="通话详情" width="600px" top="10vh">
-    <div class="chat-container">
-      <div v-if="!chatHistory || chatHistory.length === 0" class="empty-chat">
-        <el-empty description="暂无通话记录" />
+  <el-dialog v-model="dialogVisible" title="通话详情记录" width="700px" top="10vh">
+    <div class="chat-log-container">
+      <div v-if="!chatHistory || chatHistory.length === 0" class="no-messages">
+        <p>暂无通话记录</p>
       </div>
 
-      <div v-else>
-        <div 
-          v-for="(message, index) in chatHistory" 
-          :key="index" 
-          :class="['message-row', message.speaker === '用户' ? 'is-user' : 'is-cs']"
-        >
-          <div class="avatar">
-            {{ message.speaker.charAt(0) }}
-          </div>
-          
-          <div class="message-content">
-            <div class="speaker-label">{{ message.speaker }}</div>
-            <div class="message-bubble">
-              <p class="message-text">{{ message.text }}</p>
+      <div 
+        v-for="(message, index) in chatHistory" 
+        :key="index" 
+        :class="['message-bubble-wrapper', message.speaker === '用户' ? 'is-user' : 'is-cs']"
+      >
+        <div class="message-bubble">
+            <div class="message-header">
+                <span class="sender-name">{{ message.speaker }}</span>
             </div>
-          </div>
+            <div class="message-content">
+                <p>{{ message.text }}</p>
+            </div>
         </div>
       </div>
     </div>
     <template #footer>
-      <el-button @click="dialogVisible = false">关闭</el-button>
+        <el-button @click="dialogVisible = false">关闭</el-button>
     </template>
   </el-dialog>
 </template>
@@ -47,112 +43,89 @@ const dialogVisible = defineModel<boolean>();
 </script>
 
 <style scoped>
-/* 整体聊天窗口 */
-.chat-container {
-  height: 60vh; /* 使用视口高度，更灵活 */
-  background-color: #f5f7fa;
-  border: 1px solid #e4e7ed;
+/* 聊天记录容器 */
+.chat-log-container {
+  background-color: #f4f6f8;
   border-radius: 8px;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 65vh;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  padding: 20px;
 }
 
-/* 滚动条美化 (可选，但效果很好) */
-.chat-container::-webkit-scrollbar {
-  width: 6px;
-}
-.chat-container::-webkit-scrollbar-thumb {
-  background: #dcdfe6;
-  border-radius: 3px;
-}
-.chat-container::-webkit-scrollbar-track {
-  background: transparent;
+/* 消息气泡的外部容器，用于对齐 */
+.message-bubble-wrapper {
+    display: flex;
 }
 
-/* 空状态样式 */
-.empty-chat {
-  margin: auto;
-}
-
-/* 每一行消息 */
-.message-row {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 20px;
-  max-width: 80%;
-}
-
-/* 头像样式 */
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #dcdfe6;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 18px;
-  flex-shrink: 0; /* 防止头像被压缩 */
-}
-
-/* 消息内容容器 */
-.message-content {
-  display: flex;
-  flex-direction: column;
-}
-
-/* 说话人标签 */
-.speaker-label {
-  font-size: 12px;
-  color: #909399;
-  margin-bottom: 4px;
-}
-
-/* 聊天气泡 */
+/* 消息气泡 */
 .message-bubble {
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 10px 15px;
+  border-radius: 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+  line-height: 1.6;
+  max-width: 85%;
+  padding: 12px 18px;
   position: relative;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
 }
 
-.message-text {
+/* 客服消息样式 (靠左) */
+.message-bubble-wrapper.is-cs {
+  justify-content: flex-start;
+}
+.is-cs .message-bubble {
+  background-color: #ffffff;
+  border-top-left-radius: 4px;
+}
+
+/* 用户消息样式 (靠右) */
+.message-bubble-wrapper.is-user {
+  justify-content: flex-end;
+}
+.is-user .message-bubble {
+  background-color: #95ec69;
+  border-top-right-radius: 4px;
+  border-color: transparent;
+  color: #333;
+}
+
+/* 消息头部 */
+.message-header {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.is-user .message-header {
+  color: #555;
+}
+
+/* 消息内容 */
+.message-content p {
+  font-size: 14px;
+  line-height: 1.6;
   margin: 0;
-  line-height: 1.5;
-  color: #303133;
-  word-wrap: break-word; /* 文本自动换行 */
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-/* --- 客服侧样式 --- */
-.message-row.is-cs .avatar {
-  background-color: #409eff; /* 蓝色头像 */
-  margin-right: 12px;
+/* 空状态 */
+.no-messages {
+  color: #9ca3af;
+  font-style: italic;
+  padding: 40px 20px;
+  text-align: center;
 }
-.message-row.is-cs .speaker-label {
-  text-align: left;
-}
-
-/* --- 用户侧样式 (核心区别) --- */
-.message-row.is-user {
-  align-self: flex-end; /* 整行靠右 */
-  flex-direction: row-reverse; /* 头像和内容反向排列 */
+.no-messages p {
+  font-size: 16px;
+  margin: 0;
 }
 
-.message-row.is-user .avatar {
-  background-color: #67c23a; /* 绿色头像 */
-  margin-left: 12px;
-}
-
-.message-row.is-user .speaker-label {
-  text-align: right; /* 标签靠右 */
-}
-
-.message-row.is-user .message-bubble {
-  background-color: #e1ffc7; /* 类似微信的绿色气泡 */
-}
+/* 滚动条美化 */
+.chat-log-container::-webkit-scrollbar { width: 6px; }
+.chat-log-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+.chat-log-container::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+.chat-log-container::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
 </style>
