@@ -1,0 +1,27 @@
+{
+  "files": [],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ],
+  "compilerOptions": {
+    "target": "ESNext", // 1. 确保 target 也是一个现代版本
+    "module": "ESNext",
+    // 2. 关键！添加或修改这一行
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "noEmit": true,
+    "baseUrl": ".", // "paths" 依赖于 baseUrl
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}
