@@ -24,6 +24,7 @@ export default defineConfig({
   },
   // 3. 配置开发服务器的代理
   server: {
+    host: true, // 或者写成 host: '0.0.0.0'
     proxy: {
       '/api': {
         target: 'http://your-backend-api-url.com', // 将这里替换为你的后端 API 地址

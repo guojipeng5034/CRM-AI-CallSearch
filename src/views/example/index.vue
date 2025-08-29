@@ -5,14 +5,15 @@
         <el-input v-model="searchParams.userId" placeholder="请输入用户ID" clearable></el-input>
       </el-form-item>
       <el-form-item label="选择日期">
-        <el-date-picker
-          v-model="searchParams.date"
-          type="date"
-          placeholder="请选择日期"
-          format="YYYY-MM-DD"
-          value-format="YYYY-MM-DD"
-        ></el-date-picker>
+        <el-date-picker v-model="searchParams.date" type="date" placeholder="请选择日期" format="YYYY-MM-DD"
+          value-format="YYYY-MM-DD"></el-date-picker>
       </el-form-item>
+
+      <el-form-item label="密码">
+        <el-input v-model="searchParams.password" type="password" placeholder="请输入密码" show-password
+          clearable></el-input>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" :loading="isTableLoading" @click="handleQuery">查询</el-button>
       </el-form-item>
@@ -39,15 +40,9 @@
     </el-table>
 
     <div class="pagination-container">
-        <el-pagination
-            v-model:current-page="pagination.page"
-            v-model:page-size="pagination.pageSize"
-            :page-sizes="[10, 20, 50, 100]"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="totalItems"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-        />
+      <el-pagination v-model:current-page="pagination.page" v-model:page-size="pagination.pageSize"
+        :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" :total="totalItems"
+        @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
   </el-card>
 
@@ -93,8 +88,8 @@ const totalItems = ref(0);
 
 // 分页
 const pagination = reactive({
-    page: 1,
-    pageSize: 10,
+  page: 1,
+  pageSize: 10,
 });
 
 // 对话框
@@ -112,9 +107,9 @@ const handleQuery = async () => {
   isTableLoading.value = true;
   try {
     const params = {
-        ...searchParams,
-        page: pagination.page,
-        pageSize: pagination.pageSize,
+      ...searchParams,
+      page: pagination.page,
+      pageSize: pagination.pageSize,
     };
     console.log('查询参数:', params);
     // **模拟API调用**
@@ -123,11 +118,11 @@ const handleQuery = async () => {
     // const res = await yourApi.query(params);
     // 模拟后端返回的数据结构
     const mockResponse = {
-        total: 2,
-        records: [
-            { id: 1, userId: 'User001', date: '2025-08-29', status: '已完成' },
-            { id: 2, userId: 'User002', date: '2025-08-29', status: '处理中' },
-        ]
+      total: 2,
+      records: [
+        { id: 1, userId: 'User001', date: '2025-08-29', status: '已完成' },
+        { id: 2, userId: 'User002', date: '2025-08-29', status: '处理中' },
+      ]
     };
     tableData.value = mockResponse.records;
     totalItems.value = mockResponse.total;
@@ -141,7 +136,7 @@ const handleQuery = async () => {
 
 // 页面加载时执行一次查询
 onMounted(() => {
-    handleQuery();
+  handleQuery();
 });
 
 // 分页事件
@@ -178,18 +173,26 @@ const handleCollect = async (row: TableRow) => {
       name: '张三', age: 30, phone: '13800138000', notes: '用户咨询订单物流状态。'
     };
     collectDialogVisible.value = true;
-  } catch(error) {
+  } catch (error) {
     ElMessage.error('获取表单数据失败！');
   }
 };
 </script>
 
 <style scoped>
-.page-container { min-height: calc(100vh - 100px); }
-.action-bar { margin-bottom: 16px; }
+.page-container {
+  min-height: calc(100vh - 100px);
+}
+
+.action-bar {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 16px;
+}
+
 .pagination-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
 }
 </style>
